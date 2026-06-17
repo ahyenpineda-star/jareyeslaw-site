@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI ASSISTANT | J.A. Reyes Law Office</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+  <style>
+    .chat-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      height: 65vh;
+      min-height: 400px;
+      background: rgba(168, 85, 247, 0.04);
+      border: 1px solid rgba(168, 85, 247, 0.12);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(168, 85, 247, 0.3);
+      border-radius: 3px;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      line-height: 1.5;
+      font-size: 0.9rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.bot {
+      align-self: flex-start;
+      background: rgba(168, 85, 247, 0.1);
+      color: #e0d4f0;
+      border-bottom-left-radius: 4px;
+    }
+
+    .message.bot p {
+      margin: 0 0 0.5rem;
+    }
+    .message.bot p:last-child {
+      margin-bottom: 0;
+    }
+
+    .message.bot ul {
+      margin: 0.3rem 0 0.5rem 1.2rem;
+      color: #c4b5d4;
+    }
+
+    .message.bot li {
+      margin-bottom: 0.2rem;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-top: 1px solid rgba(168, 85, 247, 0.12);
+      background: rgba(10, 5, 12, 0.8);
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: rgba(168, 85, 247, 0.06);
+      color: #e0d4f0;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .chat-input-area input:focus {
+      border-color: #a855f7;
+    }
+
+    .chat-input-area input::placeholder {
+      color: #6b5b7b;
+    }
+
+    .chat-input-area button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .chat-input-area button:hover {
+      background: linear-gradient(135deg, #9333ea, #7e22ce);
+    }
+
+    .chat-input-area button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .suggested-questions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+
+    .suggested-questions button {
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 20px;
+      background: rgba(168, 85, 247, 0.06);
+      color: #c4b5d4;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .suggested-questions button:hover {
+      border-color: #a855f7;
+      background: rgba(168, 85, 247, 0.12);
+      color: #f8bbd9;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 4px 0;
+    }
+
+    .typing-indicator span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #a855f7;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1><a href="index.html" class="logo-link"><img src="images/logo.png" alt="J.A. Reyes" class="logo-img"></a></h1>
+      <button class="nav-toggle">&#9776;</button>
+      <nav>
+        <ul>
+          <li><a href="index.html">HOME</a></li>
+          <li><a href="about.html">ABOUT</a></li>
+          <li><a href="profile.html">LAWYER'S PROFILE</a></li>
+          <li><a href="lawyering.html">LAWYERING</a></li>
+          <li class="dropdown">
+            <a href="practice-areas.html">PRACTICE AREAS</a>
+            <ul class="dropdown-menu">
+              <li><a href="litigation.html">Litigation</a></li>
+              <li><a href="commercial-law.html">Commercial Law</a></li>
+              <li><a href="labor-employment.html">Labor & Employment</a></li>
+              <li><a href="civil-law.html">Civil Law</a></li>
+              <li><a href="specific-projects.html">Specific Projects</a></li>
+              <li><a href="legislative-consultancy.html">Legislative Consultancy</a></li>
+              <li><a href="government-interactions.html">Government Interactions</a></li>
+            </ul>
+          </li>
+          <li><a href="https://attyjenreyes.com/bar-coaching" target="_blank">BAR COACHING</a></li>
+          <li><a href="ai-assistant.html" class="active">AI ASSISTANT</a></li>
+          <li><a href="commitment.html">COMMITMENT</a></li>
+          <li><a href="confidentiality.html">CONFIDENTIALITY</a></li>
+          <li><a href="transparency.html">TRANSPARENCY</a></li>
+          <li><a href="approach.html">APPROACH</a></li>
+          <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero hero-sm">
+    <div class="container">
+      <h2>AI ASSISTANT</h2>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <p style="text-align: center; color: #c4b5d4; margin-bottom: 1.5rem;">Ask me anything about J.A. Reyes Law Office, Atty. Jen Reyes, or our Bar Coaching program.</p>
+
+      <div class="suggested-questions" id="suggestions">
+        <button onclick="askSuggested('What practice areas does J.A. Reyes Law Office handle?')">Practice areas</button>
+        <button onclick="askSuggested('Tell me about Atty. Jen Reyes')">About Atty. Jen Reyes</button>
+        <button onclick="askSuggested('What is the Bar Coaching program?')">Bar Coaching</button>
+        <button onclick="askSuggested('How can I contact the office?')">Contact info</button>
+        <button onclick="askSuggested('What does the Law Office do for labor cases?')">Labor cases</button>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <div class="message bot">
+            <p>Hello! I'm the J.A. Reyes Law Office AI assistant. I can answer questions about our practice areas, legal services, Bar Coaching program, and how we can help you. What would you like to know?</p>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" id="userInput" placeholder="Type your question here..." onkeypress="if(event.key==='Enter') sendMessage()">
+          <button id="sendBtn" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2019 by J.A. Reyes Law Office. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script>
+    const knowledgeBase = [
+      {
+        keywords: ['about', 'firm', 'law office', 'j.a. reyes law office', 'j a reyes'],
+        content: `J.A. Reyes Law Office is a Law Office in New Manila, Quezon City, Philippines. It was founded by Atty. Jen Reyes and provides compassionate, outcome-oriented and pragmatic legal services through contemporary and systematic methods. The firm aims excellence in its execution, focusing on present-day procedures for legal difficulties with a patient and well-founded approach. Clients can expect ample study, scrutiny and investigation of their legal controversies with utmost forbearance and confidentiality.`
+      },
+      {
+        keywords: ['attorney', 'lawyer', 'jen reyes', 'profile', 'background', 'education'],
+        content: `Atty. Jen Reyes graduated First Honorable Mention in Law School and was a consistent Dean's Lister and Honor Roll member. She was mentored by greats in the legal profession and established her own Law Office. She is also a Law Professor, teaching Civil Law Review 1, Commercial Law Review, Land Titles and Deeds, and Legal Forms.`
+      },
+      {
+        keywords: ['bar coaching', 'bar exam', 'bar review', 'coaching', 'lecture', '2026 bar'],
+        content: `Atty. Jen Reyes offers a 2026 BAR Advanced Coaching and Lecture program. The program provides comprehensive coaching and mentorship for the Philippine Bar Examinations with proven techniques and personalized guidance to help you succeed. Visit https://attyjenreyes.com/bar-coaching for more details.`
+      },
+      {
+        keywords: ['contact', 'email', 'phone', 'cellphone', 'number', 'address', 'location'],
+        content: `You can reach J.A. Reyes Law Office at:\nEmail: jareyeslawoffice@gmail.com\nCellphone: +(63)995 458 1387 (text messages only)\nLocation: New Manila, Quezon City, Philippines`
+      },
+      {
+        keywords: ['litigation', 'court', 'trial', 'appeal', 'case'],
+        content: `J.A. Reyes Law Office offers comprehensive litigation services including representation before courts, quasi-judicial agencies and appellate courts. They handle civil, criminal and administrative cases from investigation, arbitration, gathering of evidence, filing pleadings, pre-trial, trial, and appeal stages.`
+      },
+      {
+        keywords: ['commercial law', 'corporation', 'corporate', 'business', 'contract', 'insurance', 'intellectual property', 'banking'],
+        content: `The Law Office provides legal services in Commercial Law including: Corporation Law (business formation, corporate counsel), Letters of Credit, Trust Receipts Law, Negotiable Instruments Law, Insurance Code, Transportation Law, Securities Regulation Code, Banking Laws, Intellectual Property Code, and Special Commercial Laws. Services include legal representation, litigation, corporate services, legal opinions, contract drafting and review.`
+      },
+      {
+        keywords: ['labor', 'employment', 'employee', 'employer', 'dismissal', 'termination', 'illegal dismissal', 'labor law'],
+        content: `J.A. Reyes Law Office handles Labor Law matters including Labor Standards and Labor Relations such as: Recruitment and Placement, Illegal Recruitment, Employer-Employee Relationship, Termination of Employment, Illegal Dismissal, Unpaid Benefits, Management Prerogative, Right to Self-Organization, Unfair Labor Practice, Collective Bargaining, Separation Pay, Retirement, Discrimination, and Harassment. They represent both employers and employees.`
+      },
+      {
+        keywords: ['civil law', 'family', 'marriage', 'annulment', 'legal separation', 'adoption', 'custody', 'succession', 'property', 'contracts', 'obligations', 'torts', 'damages'],
+        content: `The Law Office handles Civil Law matters including:\n• Persons and Family Relations: Marriage, Legal Separation, Declaration of Nullity of Marriage, Annulment, Property Relations, Pre-Nuptial Agreements, Adoption, Paternity, Support, Parental Authority, Child Custody, Guardianship\n• Succession: Extrajudicial Partition, Probate of Wills, Settlement of Estate\n• Property: Mortgage Foreclosures, Ejectment, Forcible Entry\n• Obligations and Contracts, Sales, Lease, Partnership, Agency\n• Torts and Damages: Quasi-delict, Negligence, Medical Malpractice`
+      },
+      {
+        keywords: ['specific projects', 'legal consultancy', 'retainer', 'contract review', 'business establishment', 'legal opinion'],
+        content: `The Law Office provides specific services including:\n1. Legal Consultancy / Legal Retainer\n2. Preparation of Legal Opinions\n3. Construction and Evaluation of Contracts\n4. Drafting and Review of Specialized Contracts\n5. Business Establishment Assistance (incorporation, BIR registration, SEC, DTI)\n6. Legal Assistance in Property Exchanges and Titling\n7. Assistance before the Philippine Senate and House of Representatives`
+      },
+      {
+        keywords: ['legislative', 'bill', 'ordinance', 'public servant', 'government', 'senate', 'house of representatives'],
+        content: `J.A. Reyes Law Office assists public servants in drafting bills, ordinances, regulations and local laws. They provide assistance before the Philippine Senate and House of Representatives, and offer legal advice to public officers regarding: Administrative Law, Election Law, Law on Public Officers, and the Local Government Code. They also review contracts and counsel election campaigns.`
+      },
+      {
+        keywords: ['government', 'agency', 'local government', 'national government'],
+        content: `J.A. Reyes Law Office provides comprehensive advice and assistance to clients in their interactions and relations with government agencies, both local and national.`
+      },
+      {
+        keywords: ['commitment', 'objective', 'mission', 'justice'],
+        content: `J.A. Reyes Law Office's paramount intention is to aid the country's judicial system in the orderly administration of justice. The Law Office has the utmost acclaim and respect for the law and legal processes, making sure that every action is within the tenets of the rule of law and within the boundaries of legal procedure.`
+      },
+      {
+        keywords: ['confidentiality', 'privacy', 'protection'],
+        content: `J.A. Reyes Law Office treats its clients and their causes with utmost courtesy, protection, responsibility, sympathy and confidentiality. Clients can expect the Law Office's complete and firsthand attention and regard. The office treats every client equally, giving each foremost attention and importance.`
+      },
+      {
+        keywords: ['transparency', 'honest', 'advice'],
+        content: `J.A. Reyes Law Office provides clients transparent, unequivocal and matter-of-fact legal advice. Protecting the clients' interests within the bounds of law is its ultimate objective. The Law Office carefully studies each case before advising when to pursue litigation and when to resort to out-of-court resolutions.`
+      },
+      {
+        keywords: ['approach', 'method', 'compassionate', 'modern'],
+        content: `The Law Office takes pride in providing quality legal services through a compassionate, modern and proactive approach, with high regard for integrity and trustworthiness. It allots sufficient time, perusal and deliberation to ensure clients fully comprehend their circumstances and the legal remedies and strategies available to them.`
+      },
+      {
+        keywords: ['lawyering', 'modern times', 'legal profession', 'philosophy'],
+        content: `Atty. Jen Reyes believes that being an incorruptible and virtuous lawyer must be applied in practice. Lawyers must consistently practice with integrity, facilitating the attainment of justice. The significance of a lawyer's assistance cannot be understated - even the most brilliant professionals need legal expertise when faced with legal controversies. Modern times should be a time of opportune assertion of one's rights.`
+      },
+      {
+        keywords: ['motto', 'fiat justitia', 'justice', 'heavens fall'],
+        content: `The firm's motto is 'Fiat justitia ruat cælum' which means 'Let justice be done, though the heavens fall.'`
+      }
+    ];
+
+    function findBestResponse(query) {
+      const q = query.toLowerCase();
+      let bestMatch = null;
+      let bestScore = 0;
+
+      for (const entry of knowledgeBase) {
+        let score = 0;
+        for (const keyword of entry.keywords) {
+          if (q.includes(keyword)) {
+            score += 3;
+          }
+          const words = keyword.split(' ');
+          if (words.length > 1 && q.includes(words[0])) {
+            score += 1;
+          }
+        }
+        const queryWords = q.split(' ');
+        for (const qWord of queryWords) {
+          if (qWord.length > 2) {
+            for (const keyword of entry.keywords) {
+              if (keyword.includes(qWord)) {
+                score += 2;
+              }
+            }
+          }
+        }
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = entry;
+        }
+      }
+
+      return bestMatch;
+    }
+
+    function formatResponse(entry, query) {
+      if (!entry) {
+        return `I don't have specific information about that in my knowledge base. Please try asking about our practice areas, Atty. Jen Reyes, Bar Coaching, or contact information.`;
+      }
+      return entry.content.replace(/\n/g, '<br>');
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      input.value = '';
+      document.getElementById('sendBtn').disabled = true;
+
+      addMessage(query, 'user');
+      showTyping();
+
+      await new Promise(r => setTimeout(r, 600 + Math.random() * 400));
+
+      removeTyping();
+      const match = findBestResponse(query);
+      const response = formatResponse(match, query);
+      addMessage(response, 'bot');
+
+      document.getElementById('sendBtn').disabled = false;
+      input.focus();
+    }
+
+    function askSuggested(q) {
+      document.getElementById('userInput').value = q;
+      sendMessage();
+    }
+
+    function addMessage(text, sender) {
+      const container = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.className = `message ${sender}`;
+      div.innerHTML = text;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function showTyping() {
+      const container = document.getElementById('chatMessages');
+      const div = document.createElement('div');
+      div.className = 'message bot';
+      div.id = 'typingIndicator';
+      div.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function removeTyping() {
+      const indicator = document.getElementById('typingIndicator');
+      if (indicator) indicator.remove();
+    }
+  </script>
+</body>
+</html>
