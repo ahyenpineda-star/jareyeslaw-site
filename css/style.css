@@ -4,16 +4,22 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   line-height: 1.6;
   color: #e0d4f0;
   background: #0a050c;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .container {
-  width: 90%;
-  max-width: 1200px;
+  width: min(92%, 1200px);
   margin: 0 auto;
 }
 
@@ -135,13 +141,13 @@ nav a.active {
 .hero {
   background: radial-gradient(circle at top, #2d1438, #140818 42%, #0a050c 78%);
   color: #fff;
-  padding: 4rem 0;
+  padding: clamp(2.5rem, 6vw, 4rem) 0;
   text-align: center;
   overflow: hidden;
 }
 
 .hero-sm {
-  padding: 2.5rem 0;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
   background: radial-gradient(circle at top, #2d1438, #140818 42%, #0a050c 78%);
 }
 
@@ -173,7 +179,7 @@ nav a.active {
 }
 
 .hero h2 {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
   margin-bottom: 0.5rem;
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 700;
@@ -189,14 +195,14 @@ nav a.active {
 
 .hero .motto {
   font-style: italic;
-  font-size: 1.3rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
   font-family: 'DM Serif Display', Georgia, serif;
   color: #f8bbd9;
   margin-bottom: 0.5rem;
 }
 
 .hero p {
-  font-size: 1.05rem;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
   max-width: 700px;
   margin: 0 0 1.5rem;
   color: #c4b5d4;
@@ -232,12 +238,12 @@ nav a.active {
 
 /* Sections */
 section {
-  padding: 3.5rem 0;
+  padding: clamp(2rem, 5vw, 3.5rem) 0;
 }
 
 .section-title {
   text-align: center;
-  font-size: 1.8rem;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
   margin-bottom: 1.5rem;
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 700;
@@ -387,6 +393,7 @@ footer {
   padding: 2rem 0;
   font-size: 0.85rem;
   border-top: 1px solid rgba(168, 85, 247, 0.1);
+  margin-top: auto;
 }
 
 /* Practice list */
@@ -456,10 +463,17 @@ footer {
     padding: 1rem;
     gap: 0.3rem;
     align-items: stretch;
+    max-height: 80vh;
+    overflow-y: auto;
   }
 
   nav > ul.open {
     display: flex;
+  }
+
+  nav a {
+    font-size: 0.82rem;
+    padding: 0.6rem 0.8rem;
   }
 
   .dropdown-menu {
@@ -476,13 +490,10 @@ footer {
     display: block;
   }
 
-  .hero h2 {
-    font-size: 1.8rem;
-  }
-
   .hero-split {
     grid-template-columns: 1fr;
     text-align: center;
+    gap: 1.5rem;
   }
 
   .hero-split .hero-text {
@@ -494,7 +505,7 @@ footer {
   }
 
   .hero-split .hero-image img {
-    max-width: 240px;
+    max-width: 220px;
   }
 
   .hero-split p {
@@ -508,13 +519,82 @@ footer {
   .grid-3,
   .grid-2 {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .contact-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .content-page .container[style*="grid-template-columns: 1fr 1fr"] {
     grid-template-columns: 1fr !important;
+  }
+
+  .practice-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 0.6rem 0;
+  }
+
+  header .logo-img {
+    height: 28px;
+  }
+
+  nav a {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .hero-split .hero-image img {
+    max-width: 180px;
+  }
+
+  .hero h2 {
+    font-size: 1.5rem;
+  }
+
+  .hero .motto {
+    font-size: 1rem;
+  }
+
+  .btn {
+    padding: 0.6rem 1.4rem;
+    font-size: 0.82rem;
+  }
+
+  .hero .btn + .btn {
+    margin-left: 0 !important;
+    margin-top: 0.75rem;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  .practice-item {
+    padding: 1rem;
+  }
+
+  .practice-list {
+    gap: 1rem;
+  }
+
+  .content-page h3 {
+    font-size: 1.1rem;
+  }
+
+  .content-page ul, .content-page ol {
+    margin-left: 1.2rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    padding: 0.6rem;
+    font-size: 0.9rem;
   }
 }

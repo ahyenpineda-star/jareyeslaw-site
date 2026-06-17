@@ -15,6 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  navMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 900 && !link.closest('.dropdown')) {
+        navMenu.classList.remove('open');
+      }
+    });
+  });
+
   const currentPage = location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('nav a').forEach(link => {
     if (link.getAttribute('href') === currentPage) {
