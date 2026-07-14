@@ -1,0 +1,26 @@
+{
+  "name": "J.A. Reyes Law Office",
+  "short_name": "J.A. Reyes Law",
+  "description": "Compassionate, outcome-oriented and pragmatic legal services by Atty. Jen Reyes.",
+  "start_url": "/jareyeslaw-site/index.html",
+  "display": "standalone",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "images/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "images/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["legal", "business"],
+  "lang": "en"
+}
