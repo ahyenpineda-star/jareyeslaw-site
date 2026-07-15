@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jareyeslaw-v1';
+const CACHE_NAME = 'jareyeslaw-v2';
 const urlsToCache = [
   '/',
   '/jareyeslaw-site/index.html',
@@ -10,6 +10,7 @@ const urlsToCache = [
   '/jareyeslaw-site/images/icon-512x512.png',
   '/jareyeslaw-site/about.html',
   '/jareyeslaw-site/profile.html',
+  '/jareyeslaw-site/appearances.html',
   '/jareyeslaw-site/lawyering.html',
   '/jareyeslaw-site/practice-areas.html',
   '/jareyeslaw-site/litigation.html',
