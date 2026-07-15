@@ -47,6 +47,7 @@ header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1400px;
 }
 
 header h1 {
@@ -551,6 +552,16 @@ footer {
 
   .practice-list {
     grid-template-columns: 1fr;
+  }
+
+  .video-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .video-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
