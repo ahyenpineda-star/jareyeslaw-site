@@ -218,47 +218,106 @@ def create_article_card(article_info):
             <p style="color: #c4b5d4; margin: 0; font-size: 0.85rem;">{article_info.get('title', 'New article featuring Atty. Jen Reyes.')}</p>
           </a>'''
 
+def find_last_youtube_card_end(content):
+    """Find the position after the last YouTube video card."""
+    last_yt_pos = -1
+    idx = 0
+    while True:
+        pos = content.find('youtube.com/embed/', idx)
+        if pos == -1:
+            break
+        # Find the end of this video card (next </div> after video-info closing)
+        card_end = content.find('</div>\n', pos)
+        if card_end != -1:
+            last_yt_pos = card_end + len('</div>\n')
+        idx = pos + 1
+    return last_yt_pos
+
+def find_last_tiktok_card_end(content):
+    """Find the position after the last TikTok video card."""
+    last_tt_pos = -1
+    idx = 0
+    while True:
+        pos = content.find('tiktok.com/embed/', idx)
+        if pos == -1:
+            break
+        # Find the end of this video card (next </div>\n after video-info closing)
+        # TikTok cards end with </div>\n\n or </div>\n
+        search_from = pos
+        while search_from < len(content):
+            next_div = content.find('</div>', search_from)
+            if next_div == -1:
+                break
+            # Check if this looks like the card end (followed by newline and another div or whitespace)
+            after = content[next_div:next_div+20]
+            if '</div>\n' in after:
+                last_tt_pos = next_div + len('</div>\n')
+                break
+            search_from = next_div + 1
+        idx = pos + 1
+    return last_tt_pos
+
 def update_appearances_html(new_videos, new_articles):
-    """Update the appearances.html file with new content."""
+    """Update the appearances.html file with new content, keeping YouTube before TikTok."""
     with open(APPEARANCES_FILE, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    # Find insertion points
-    video_grid_end = content.find('</div>\n\n      <div style="margin-top: 2.5rem; text-align: center;">')
-    articles_section_start = content.find('<div style="margin-top: 3rem; padding: 2rem; background: rgba(168, 85, 247, 0.05);')
+    # Separate new videos by source
+    new_youtube = [v for v in new_videos if v['source'] == 'youtube']
+    new_tiktok = [v for v in new_videos if v['source'] == 'tiktok']
     
-    if video_grid_end == -1 or articles_section_start == -1:
-        print("Could not find insertion points in HTML")
-        return False
-    
-    # Add new videos before the TikTok button
-    new_video_html = ""
-    for video in new_videos:
+    # Generate HTML for new videos
+    youtube_html = ""
+    for video in new_youtube:
         title = video.get('title', 'New Interview')
         if not title or len(title) < 5:
-            title = f"New {video['source'].title()} Interview"
-        new_video_html += create_video_card(video, 
+            title = f"New YouTube Interview"
+        youtube_html += create_video_card(video, 
             title=title, 
             description=f"Recent appearance by Atty. Jen Reyes.",
             date=datetime.now().strftime("%B %d, %Y"))
     
-    # Insert new videos
-    content = content[:video_grid_end] + "\n" + new_video_html + content[video_grid_end:]
+    tiktok_html = ""
+    for video in new_tiktok:
+        title = video.get('title', 'New Interview')
+        if not title or len(title) < 5:
+            title = f"New TikTok Video"
+        tiktok_html += create_video_card(video, 
+            title=title, 
+            description=f"Recent appearance by Atty. Jen Reyes.",
+            date=datetime.now().strftime("%B %d, %Y"))
     
-    # Recalculate articles section start after insertion
-    articles_section_start = content.find('<div style="margin-top: 3rem; padding: 2rem; background: rgba(168, 85, 247, 0.05);')
-    articles_grid_start = content.find('<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.2rem;">', articles_section_start)
+    # Insert YouTube videos after the last YouTube card
+    if youtube_html:
+        yt_insert_pos = find_last_youtube_card_end(content)
+        if yt_insert_pos == -1:
+            # Fallback: insert at start of video grid
+            yt_insert_pos = content.find('<div class="video-grid">') + len('<div class="video-grid">')
+        content = content[:yt_insert_pos] + "\n" + youtube_html + content[yt_insert_pos:]
     
-    if articles_grid_start != -1:
-        # Add new articles
-        new_article_html = ""
-        for article in new_articles:
-            new_article_html += create_article_card(article)
-        
-        # Find end of articles grid
-        articles_grid_end = content.find('</div>\n      </div>', articles_grid_start)
-        if articles_grid_end != -1:
-            content = content[:articles_grid_end] + "\n" + new_article_html + content[articles_grid_end:]
+    # After inserting YouTube, recalculate TikTok position
+    if tiktok_html:
+        tt_insert_pos = find_last_tiktok_card_end(content)
+        if tt_insert_pos == -1:
+            # No existing TikTok videos — insert before the Follow button
+            tt_insert_pos = content.find('Follow Atty. Jen on TikTok')
+            if tt_insert_pos != -1:
+                # Go back to the start of that line
+                tt_insert_pos = content.rfind('<div', 0, tt_insert_pos)
+        if tt_insert_pos != -1:
+            content = content[:tt_insert_pos] + "\n" + tiktok_html + content[tt_insert_pos:]
+    
+    # Add new articles
+    if new_articles:
+        articles_grid_start = content.find('<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.2rem;">')
+        if articles_grid_start != -1:
+            new_article_html = ""
+            for article in new_articles:
+                new_article_html += create_article_card(article)
+            
+            articles_grid_end = content.find('</div>\n      </div>', articles_grid_start)
+            if articles_grid_end != -1:
+                content = content[:articles_grid_end] + "\n" + new_article_html + content[articles_grid_end:]
     
     # Write updated content
     with open(APPEARANCES_FILE, 'w', encoding='utf-8') as f:
