@@ -1,0 +1,43 @@
+name: Update Appearances Page
+
+on:
+  schedule:
+    # Runs daily at 8:00 AM UTC (4:00 PM Philippine Time)
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r scripts/requirements.txt
+      
+      - name: Run update script
+        run: python scripts/update_appearances.py
+        env:
+          YOUTUBE_SEARCH_QUERIES: |
+            Atty Jen Reyes interview
+            Jennifer Arlene Reyes lawyer Philippines
+            Atty Jennifer Reyes constitutional law
+            Atty Jen Reyes impeachment
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff --cached --quiet || git commit -m "Auto-update: New media appearances added [skip ci]"
+          git push
