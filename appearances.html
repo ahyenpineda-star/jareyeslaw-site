@@ -79,6 +79,40 @@
       margin-top: 0.5rem;
       display: block;
     }
+    .fb-link-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1877f2 0%, #0d5bbd 100%);
+      min-height: 200px;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .fb-link-card:hover {
+      transform: scale(1.02);
+      opacity: 0.9;
+    }
+    .fb-link-icon {
+      font-size: 3rem;
+      color: white;
+      margin-bottom: 0.8rem;
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.15);
+      border-radius: 50%;
+    }
+    .fb-link-card span {
+      color: white;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .video-card iframe {
+      display: block;
+    }
 
   </style>
 </head>
@@ -132,7 +166,9 @@
 
       <div class="video-grid">
         <div class="video-card">
-          <iframe width="100%" height="315" src="https://www.youtube.com/embed/P6hunuY4zyU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="youtube-embed">
+            <iframe src="https://www.youtube.com/embed/P6hunuY4zyU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
           <div class="video-info">
             <h4>Day 5 ng Impeachment Trial - Arangkada Balita</h4>
             <p>Atty. Jennifer Reyes, Sinuri Kung Sino Ang Lamang sa Day 5 ng Impeachment Trial.</p>
@@ -141,7 +177,9 @@
         </div>
 
         <div class="video-card">
-          <iframe width="100%" height="315" src="https://www.youtube.com/embed/apMNhXOkkME" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="youtube-embed">
+            <iframe src="https://www.youtube.com/embed/apMNhXOkkME" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
           <div class="video-info">
             <h4>Pseudo-patriotism & ICC Warrant</h4>
             <p>Atty. Jen Reyes: 'Pseudo-patriotism' can't block ICC warrant of arrest.</p>
@@ -150,16 +188,22 @@
         </div>
 
         <div class="video-card">
-          <div class="fb-post" data-href="https://www.facebook.com/share/v/17wTpzB2eu/" data-width="552"></div>
+          <a href="https://www.facebook.com/share/v/17wTpzB2eu/" target="_blank" class="fb-link-card">
+            <div class="fb-link-icon">&#9654;</div>
+            <span>Watch on Facebook</span>
+          </a>
           <div class="video-info">
-            <h4>Facebook Video</h4>
-            <p>Atty. Jen Reyes media appearance.</p>
+            <h4>Arangkada Balita</h4>
+            <p>Atty. Jen Reyes media appearance on Arangkada Balita.</p>
             <span class="video-date">2026</span>
           </div>
         </div>
 
         <div class="video-card">
-          <div class="fb-post" data-href="https://www.facebook.com/share/p/14arPYjgqBj/" data-width="552"></div>
+          <a href="https://www.facebook.com/share/p/14arPYjgqBj/" target="_blank" class="fb-link-card">
+            <div class="fb-link-icon">&#9654;</div>
+            <span>Watch on Facebook</span>
+          </a>
           <div class="video-info">
             <h4>Facebook Post</h4>
             <p>Atty. Jen Reyes media appearance.</p>
@@ -168,7 +212,10 @@
         </div>
 
         <div class="video-card">
-          <div class="fb-post" data-href="https://www.facebook.com/share/v/1axRUEmYFp/" data-width="552"></div>
+          <a href="https://www.facebook.com/share/v/1axRUEmYFp/" target="_blank" class="fb-link-card">
+            <div class="fb-link-icon">&#9654;</div>
+            <span>Watch on Facebook</span>
+          </a>
           <div class="video-info">
             <h4>Facebook Video</h4>
             <p>Atty. Jen Reyes media appearance.</p>
@@ -177,7 +224,10 @@
         </div>
 
         <div class="video-card">
-          <div class="fb-post" data-href="https://www.facebook.com/share/v/1Jgg9KW3Ud/" data-width="552"></div>
+          <a href="https://www.facebook.com/share/v/1Jgg9KW3Ud/" target="_blank" class="fb-link-card">
+            <div class="fb-link-icon">&#9654;</div>
+            <span>Watch on Facebook</span>
+          </a>
           <div class="video-info">
             <h4>Facebook Video</h4>
             <p>Atty. Jen Reyes media appearance.</p>
@@ -186,7 +236,7 @@
         </div>
 
         <div class="video-card">
-          <div class="fb-post" data-href="https://www.facebook.com/attyjenreyes/videos/atty-jen-reyes-sa-arangkada-balita/2866996883640286/" data-width="552"></div>
+          <iframe src="https://www.facebook.com/video/embed?video_id=2866996883640286" width="500" height="281" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
           <div class="video-info">
             <h4>Arangkada Balita - Legal Analysis</h4>
             <p>Discussion on arrest warrants and the credibility of the Impeachment Trial.</p>
@@ -195,7 +245,7 @@
         </div>
 
         <div class="video-card">
-          <div class="fb-post" data-href="https://www.facebook.com/attyjenreyes/videos/atty-jen-reyes-live-sa-prtvs-arangkada-balita/1561000172324870/" data-width="552"></div>
+          <iframe src="https://www.facebook.com/video/embed?video_id=1561000172324870" width="500" height="281" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
           <div class="video-info">
             <h4>PRTV's Arangkada Balita - Impeachment Trial</h4>
             <p>Atty. Jen Reyes, Live sa PRTV's Arangkada Balita discussing the Impeachment Trial of Vice President Sara Duterte.</p>
@@ -204,7 +254,7 @@
         </div>
 
         <div class="video-card">
-          <div class="fb-post" data-href="https://www.facebook.com/attyjenreyes/videos/1916261305994497/" data-width="552"></div>
+          <iframe src="https://www.facebook.com/video/embed?video_id=1916261305994497" width="500" height="281" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
           <div class="video-info">
             <h4>2025 Year in Review</h4>
             <p>Isang taon na puno ng kontrobersya at mga alyansang tuluyan nang nabuwag.</p>
@@ -227,23 +277,7 @@
 
   <script src="js/script.js"></script>
 
-  <div id="fb-root"></div>
   <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        xfbml: true,
-        version: 'v25.0'
-      });
-    };
-
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk.js';
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
